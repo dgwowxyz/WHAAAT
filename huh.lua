@@ -1686,16 +1686,6 @@ return (function(...)
 			end
 			return B(...);
 		end));
-		game.UserInputService.InputBegan:Connect(function(workspace)
-			if (workspace.UserInputType == Enum.UserInputType.MouseButton2) then
-				Holding = true;
-			end
-		end);
-		game.UserInputService.InputEnded:Connect(function(workspace)
-			if (workspace.UserInputType == Enum.UserInputType.MouseButton2) then
-				Holding = false;
-			end
-		end);
 		function Draw(workspace, Camera)
 			workspace = Drawing.new(workspace);
 			for Camera, Players in pairs(Camera) do
@@ -2214,12 +2204,6 @@ return (function(...)
 						p = workspace;
 					end
 				end);
-				local W = Enum.ContextActionPriority.Low.Value;
-				local z = Enum.ContextActionPriority.High.Value;
-				local M = {
-					Enum.KeyCode.LeftShift,
-					Enum.KeyCode.P
-				};
 				local g = Vector3.new(1, 1, 1) * 64;
 				local T = Vector2.new(0.75, 1) * 8;
 				local r = 300;
@@ -2317,13 +2301,6 @@ return (function(...)
 					local g = 0.75;
 					local T = 0.25;
 					local r = 1;
-					F.Vel = function(workspace)
-						r = Players(r + (workspace * (a.Up - a.Down) * g), 0.01, 4);
-						local Camera = Vector3.new(Character(q.Thumbstick1.x), Character(q.ButtonR2) - Character(q.ButtonL2), Character(-q.Thumbstick1.y)) * f;
-						local LocalPlayer = Vector3.new(((a.D - a.A) + a.LocalPlayer) - a.H, ((a.E - a.Players) + a.I) - a.Y, ((a.S - a.W) + a.J) - a.U) * s;
-						local WorldToPoint = v:IsKeyDown(Enum.KeyCode.LeftShift) or v:IsKeyDown(Enum.KeyCode.RightShift);
-						return (Camera + LocalPlayer) * r * ((WorldToPoint and T) or 1);
-					end;
 					F.Pan = function(workspace)
 						local Camera = Vector2.new(Character(q.Thumbstick2.y), Character(-q.Thumbstick2.x)) * p;
 						local Players = X.Delta * R;
@@ -2336,45 +2313,6 @@ return (function(...)
 						X.MouseWheel = 0;
 						return Camera + Players;
 					end;
-					do
-						local function workspace(workspace, Camera, Players)
-							a[Players.KeyCode.Name] = ((Camera == Enum.UserInputState.Begin) and 1) or 0;
-							return Enum.ContextActionResult.Sink;
-						end
-						local function Camera(workspace, Camera, Players)
-							q[Players.KeyCode.Name] = ((Camera == Enum.UserInputState.Begin) and 1) or 0;
-							return Enum.ContextActionResult.Sink;
-						end
-						local function Players(workspace, Camera, Players)
-							local LocalPlayer = Players.Delta;
-							X.Delta = Vector2.new(-LocalPlayer.y, -LocalPlayer.x);
-							return Enum.ContextActionResult.Sink;
-						end
-						local function LocalPlayer(workspace, Camera, Players)
-							q[Players.KeyCode.Name] = Players.Position;
-							return Enum.ContextActionResult.Sink;
-						end
-						local function Character(workspace, Camera, Players)
-							q[Players.KeyCode.Name] = Players.Position.z;
-							return Enum.ContextActionResult.Sink;
-						end
-						local function WorldToPoint(workspace, Camera, Players)
-							X[Players.UserInputType.Name] = -Players.Position.z;
-							return Enum.ContextActionResult.Sink;
-						end
-						local function f(workspace)
-							for Camera, Players in pairs(workspace) do
-								workspace[Camera] = Players * 0;
-							end
-						end
-						F.StartCapture = function()
-							GetMouse:BindActionAtPriority("FreecamKeyboard", workspace, false, z, Enum.KeyCode.W, Enum.KeyCode.U, Enum.KeyCode.A, Enum.KeyCode.H, Enum.KeyCode.S, Enum.KeyCode.J, Enum.KeyCode.D, Enum.KeyCode.LocalPlayer, Enum.KeyCode.E, Enum.KeyCode.I, Enum.KeyCode.Players, Enum.KeyCode.Y, Enum.KeyCode.Up, Enum.KeyCode.Down);
-							GetMouse:BindActionAtPriority("FreecamMousePan", Players, false, z, Enum.UserInputType.MouseMovement);
-							GetMouse:BindActionAtPriority("FreecamMouseWheel", WorldToPoint, false, z, Enum.UserInputType.MouseWheel);
-							GetMouse:BindActionAtPriority("FreecamGamepadButton", Camera, false, z, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonY);
-							GetMouse:BindActionAtPriority("FreecamGamepadTrigger", Character, false, z, Enum.KeyCode.ButtonR2, Enum.KeyCode.ButtonL2);
-							GetMouse:BindActionAtPriority("FreecamGamepadThumbstick", LocalPlayer, false, z, Enum.KeyCode.Thumbstick1, Enum.KeyCode.Thumbstick2);
-						end;
 						F.StopCapture = function()
 							r = 1;
 							f(q);
